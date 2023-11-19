@@ -14,7 +14,7 @@ systemctl enable mariadb
 
 #restore the dump file for the application
 cd /tmp/
-wget https://raw.githubusercontent.com/devopshydclub/vprofile-repo/vp-rem/src/main/resources/db_backup.sql
+wget https://github.com/subhasishpaul/vprofile-project1/blob/4b6de32b935a006e0b6320f815c32382538d998b/src/main/resources/db_backup.sql
 mysqladmin -u root password "$DATABASE_PASS"
 mysql -u root -p"$DATABASE_PASS" -e "UPDATE mysql.user SET Password=PASSWORD('$DATABASE_PASS') WHERE User='root'"
 mysql -u root -p"$DATABASE_PASS" -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1')"
@@ -36,17 +36,18 @@ systemctl enable memcached
 systemctl status memcached
 memcached -p 11211 -U 11111 -u memcached -d
 sleep 30
-yum install socat -y
-yum install wget -y
-wget https://www.rabbitmq.com/releases/rabbitmq-server/v3.6.10/rabbitmq-server-3.6.10-1.el7.noarch.rpm
-rpm --import https://www.rabbitmq.com/rabbitmq-release-signing-key.asc
-yum update
-rpm -Uvh rabbitmq-server-3.6.10-1.el7.noarch.rpm
-systemctl start rabbitmq-server
-systemctl enable rabbitmq-server
-systemctl status rabbitmq-server
-echo "[{rabbit, [{loopback_users, []}]}]." > /etc/rabbitmq/rabbitmq.config
-rabbitmqctl add_user test test
-rabbitmqctl set_user_tags test administrator
-systemctl restart rabbitmq-server
+sudo yum install epel-release -y
+sudo yum update -y
+sudo yum install wget -y
+cd /tmp/
+dnf -y install centos-release-rabbitmq-38
+dnf --enablerepo=centos-rabbitmq-38 -y install rabbitmq-server
+systemctl enable --now rabbitmq-server
+sudo systemctl start rabbitmq-server
+sudo systemctl enable rabbitmq-server
+sudo systemctl status rabbitmq-server
+sudo sh -c 'echo "[{rabbit, [{loopback_users, []}]}]." > /etc/rabbitmq/rabbitmq.config'
+sudo rabbitmqctl add_user test test
+sudo rabbitmqctl set_user_tags test administrator
+sudo systemctl restart rabbitmq-server
 
