@@ -13,6 +13,7 @@ EOF
 sudo sysctl --system
 
 ## INSTALLING DOCKER ENGINE BASED ON OS
+## First part for Redhat and 2nd part for Ubuntu OS
 
 yum --help &>> /dev/null
 if [ $? -eq 0 ]
